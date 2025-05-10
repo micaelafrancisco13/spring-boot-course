@@ -7,45 +7,28 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StoreApplication {
 
     /*
-     * Earlier we talked about dependencies.
-     * I mentioned that dependencies are third-party libraries or frameworks we use in our application.
-     * For example, to build a web application, we need an embedded web server like Tomcat.
-     * We need libraries for handling web requests, building APIs, processing JSON data, logging, and so on.
+     * In this lesson, we'll create our first controller to handle requests to the home page
+     * and serve a simple HTML file.
+     * But before we start coding, let's take a moment to understand
+     * the basics of Spring MVC, which is the foundation of how we handle web requests in Spring Boot.
      *
-     * Now in Spring Boot applications,
-     * instead of adding multiple individual libraries, we can use a starter dependency,
-     * which is a curated collection of libraries and frameworks that are commonly used together.
-     * They are tested and verified by the Spring development team.
+     * Spring MVC stands for Model-View-Controller.
+     * It's part of the Spring Framework that helps us build web applications.
+     * It provides a clean way to separate different parts of our application,
+     * making it easier to manage and scale.
      *
-     * So in this example, if we add the starter web dependency,
-     * it will bring in a compatible version of these libraries.
-     * Let's see this in action.
-     * Open up your browser and search for Maven Central.
-     * It's located at central.sonatype.com.
-     * Maven Central is a public repository where we can find dependencies for our projects.
-     * It's similar to NPM for JavaScript, PyPI for Python, NuGet for .NET, and so on.
+     * The Model is where our application's data lives.
+     * It represents the business logic and is usually connected to a database
+     * or other data sources.
+     * In Spring Boot, the model can be a simple Java class.
      *
-     * Now let's search for `spring-boot-starter-web`.
-     * This dependency or project is owned by `org.springframework.boot`.
+     * The View is what the user sees.
+     * It's the HTML, CSS, or JavaScript rendered in the browser.
+     * In Spring MVC, views can be static files or dynamically generated using tools like Thymeleaf.
      *
-     * To use this in our project, all we have to do is copy this piece of code into our `pom.xml` file.
-     *
-       <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.4.5</version>
-       </dependency>
-     *
-     *
-     * Back to Apache Maven.
-     * Here you can see we have a dependency.
-     * The group ID is `org.springframework.boot`,
-     * and the artifact ID is `spring-boot-starter-web`.
-     * We also have the version.
-     * Now let's copy this to the clipboard.
-     *
-     * Back to IntelliJ.
-     * Let's go to our `pom.xml` file.
+     * The Controller is like a traffic controller.
+     * It handles incoming requests from the user, interacts with the model to get data,
+     * and then tells the view what to display.
      */
 
     public static void main(String[] args) {
