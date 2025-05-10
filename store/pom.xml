@@ -3,10 +3,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <!--
+            `spring-boot-dependencies` is a parent of `spring-boot-starter-parent`.
+            `spring-boot-starter-web` is a dependency of this project's grandparent.
+            Using this mechanism,
+            we allow the dependencies that we add here to inherit their version from this parent project.
+            So if they are listed in the parent project,
+            the version that is compatible with our project will be used here.
+            Otherwise, Maven will use the latest version of those dependencies.
+
+            This has two benefits.
+            One benefit is that it simplifies our `pom.xml` file.
+            So down here, where we specify our dependencies, we don't have to include their version.
+            The other benefit is that if you upgrade the version of Spring Boot,
+            all dependency versions are automatically updated to their tested compatible counterparts.
+
+            So as a best practice, when working with Spring Boot dependencies,
+            we should remove the version and let Spring Boot manage versions for us.
+        -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from a repository -->
     </parent>
     <groupId>com.codewithmosh</groupId>
     <artifactId>store</artifactId>
@@ -40,6 +58,82 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--
+            In this file, we have a tag called `dependencies` where we can list the dependencies of our project.
+            This new project that we have created has two dependencies by default.
+            One of them is `spring-boot-starter`.
+            The other is `spring-boot-starter-test`.
+
+            Now, after these two dependency tags,
+            we're going to paste the piece of code that we just copied.
+            Here we have an error on the version
+            because IntelliJ cannot find this dependency in our local repository.
+            It cannot find it on our machine.
+            To fix this issue, we have to click on the icon up here for synchronizing Maven changes.
+            So whenever we add a dependency to our project,
+            we have to click this icon to reload our Maven project.
+            Then IntelliJ will download our new dependencies.
+        -->
+
+        <!--
+            Earlier I mentioned that starter dependencies are curated collections of libraries that work together.
+            If you expand this, you can see here we have another dependency for working with JSON data.
+            We'll talk about this in the future.
+            We have a dependency for Tomcat, which is our embedded web server.
+            We have dependencies for Spring Web and Spring Web MVC. These are used for building web applications.
+            With these libraries, we can process web requests and build APIs.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!--
+                One more thing before we finish this lesson.
+                When working with Spring Boot dependencies,
+                as a best practice, we should remove the version here
+                and let Spring Boot manage versioning for us.
+
+                Now let's go to the top.
+            -->
+<!--            <version>3.4.5</version>-->
+        </dependency>
+
+        <!--
+            So this is one way to add a dependency.
+            We go to Maven Central, we copy a piece of code,
+            add it to our `pom.xml` file, and then reload our Maven project.
+            That's one way.
+            But there is an easier way.
+            Now here we can press `Command + N`
+            on Mac or `Ctrl + N` on Windows to bring up the context menu.
+            Here we select `Dependency`.
+            Now in this search box, we search for `spring-boot-starter-web`.
+
+            If this doesn't work on your machine, remove and reinstall IntelliJ.
+            That will solve the problem.
+
+            Now here you can see various dependencies that match the search pattern.
+            We're going to select this one from `org.springframework.boot`.
+            This is `spring-boot-starter-web` version `3.3.2`.
+            Let's add this to our project.
+
+            Once again, we have an error here because this version doesn't exist in our local repository.
+            So we click on the Maven icon here to reload our project,
+            and now IntelliJ downloaded this dependency into our local repository.
+        -->
+
+        <!--
+            If you look on the right side, we have this Maven panel.
+            In this panel, we have our project.
+            Here we have a node called `Repositories`.
+            We have two repositories: a local repository,
+            which is a folder on our machine where these dependencies are stored.
+            On Mac, it's inside our home folder `/Users/username/.m2/repository`.
+            On Windows, it's probably somewhere like `C:\Users\username\.m2\repository`.
+
+            We also have a central repository which references Maven Central.
+        -->
+
     </dependencies>
 
     <build>
