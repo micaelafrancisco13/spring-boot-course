@@ -7,68 +7,92 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StoreApplication {
 
     /*
-     * Before we jump into writing code, let's take a few minutes and talk about what the Spring Framework is,
-     * what it offers, and how Spring Boot builds on it to make our lives easier.
+     * Now let's talk about our project structure.
      *
-     * Let's start with the Spring Framework.
-     * It's a popular framework for building Java applications.
-     * Think of it as a toolbox for building applications.
-     * It has a lot of modules, each designed to handle a specific task.
-     * These modules are broadly categorized into a few different layers.
+     * First, we have this folder `.idea` that contains a bunch of configuration files used by IntelliJ.
+     * You never have to touch this.
      *
-     * SPRING FRAMEWORK LAYERS
-     *   WEB | DATA
-     *      AOP
-     *      CORE
-     *      TEST
+     * Then we have `.mvn`.
+     * This is part of Maven wrapper,
+     * which is a way to run Maven without requiring it to be globally installed on your machine.
+     * With this, we can ensure consistent Maven builds across different environments.
+     * So we can take this project,
+     * put it on a different machine and build it with the exact same version of Maven.
+     * And with this, we can prevent surprises.
      *
-     * At the core, we have modules for handling dependency injection and managing objects.
-     * We'll talk about that in detail in the next section.
+     * So inside this folder, we have the `wrapper` folder.
+     * And in this folder,
+     * we have a configuration file that specifies the version of Maven we're going to build this project with.
+     * That is `3.3.2`.
+     * This is different from the Maven you have globally installed on your machine.
      *
-     * In the web layer, we have modules for building web applications.
-     * With these modules, we can handle web requests,
-     * process data, and return responses, whether it's HTML for a web page or JSON for an API.
+     * Now once again, I want to emphasize.
+     * If you use IntelliJ,
+     * you don't need to install Maven globally on your machine because IntelliJ comes with Maven built-in.
+     * Okay?
+     * So this is our configuration file.
      *
-     * In the data layer, we have modules for working with databases,
-     * whether you're using SQL, NoSQL, or even in-memory databases.
-     * We also have a module
-     * for adding cross-cutting features like logging or security without cluttering the main code.
-     * This is called AOP or aspect-oriented programming.
+     * Now in this project, we also have two Maven wrapper files in the root.
+     * We have `mvnw`, which is for Mac or Linux, and `mvnw.cmd` for Windows.
+     * Both of these files are shell scripts.
+     * So here we have some code
+     * that would automatically download the version of Maven specified in this configuration file.
      *
-     * We also have a module for testing Spring components.
+     * Okay?
+     * So that's the `.mvn` folder.
      *
-     * Now the beauty of Spring is that it's modular,
-     * so you can pick and choose the modules you need for your project.
-     * It's powerful and flexible, which is why so many developers love it.
+     * Then we have a couple of files for our git repositories.
+     * That's pretty standard.
+     * We're not going to talk about them in this course.
      *
-     * Now, while the Spring Framework is powerful, using it often involves a lot of configuration.
-     * For example, if you want to build a web application,
-     * you might need to set up a web server, configure routing,
-     * and manage dependencies manually.
-     * This can make development slower and more complex.
+     * We have `HELP.md`, which is a Markdown file that contains instructions for getting started.
+     * Again, we don't care about it.
      *
-     * That's where Spring Boot comes in.
-     * Think of Spring Boot as a layer on top of the Spring Framework
-     * that takes care of all the tedious setups for you.
-     * It simplifies Spring development by providing sensible defaults and ready-to-use features.
+     * Next, we have `pom.xml`.
+     * This is short for Project Object Model.
+     * And this is the heart of a Maven project.
+     * So in this file, we have some configuration about our project and its dependencies.
      *
-     * So why does this matter?
-     * With Spring Boot, you can go from idea to working application in minutes instead of hours.
-     * It saves you time, reduces boilerplate code,
-     * and lets you focus on what really matters: building great features for your users.
+     * Now what you see here is a format called XML, which a lot of younger developers are not familiar with.
+     * It's similar to HTML.
+     * So here we have open and close tags.
+     * And in between these tags, we have some data.
      *
-     * By the way, the Spring Framework is just one part of a larger family of projects in the Spring ecosystem.
-     * These projects extend the capabilities of the framework to address specific needs.
+     * So here we have all the attributes we specified at the time of creating our project.
+     * We have `groupId`, `artifactId`;
+     * This is the version of our project and so on.
      *
-     * For example, we have Spring Data for simplifying database access.
-     * We have Spring Security for adding authentication and authorization to our applications.
-     * We have Spring Batch for batch processing,
-     * Spring Cloud for building microservices and distributed systems.
-     * We have Spring Integration for simplifying messaging and integration between systems and more.
+     * Further down below, we have a tag called `dependencies`,
+     * which we're going to talk about later in this section.
      *
-     * Now that you understand what the Spring Framework and Spring Boot are
-     * and how they fit in the larger Spring ecosystem,
-     * let's start building.
+     * So `pom.xml` is the heart of Maven projects.
+     * Maven uses this file to download dependencies and build our project.
+     *
+     * Now back to our project structure.
+     * In the `src` folder, we have the actual code for our project.
+     * We have `main` and `test`.
+     * In the `test` folder, we write our automated tests.
+     * In the `main` folder, we write the actual code.
+     *
+     * Here we have two subfolders, `java`,
+     * where we have our Java files, and `resources` where we have non-Java files,
+     * like configuration files, as well as static assets like HTML, CSS, JavaScript, and so on.
+     *
+     * In the `resources` folder, we have a configuration file called `application.properties`.
+     * Here, we can have one or more key-value pairs.
+     * So here is a key `spring.application.name`, and the value is `store`.
+     * In this file, we can specify the server port, our database settings, and so on.
+     *
+     * Now here in the `java` folder,
+     * we have a package based on the group and artifact we specified when creating this project.
+     * In this package, we currently have one file, `StoreApplication`,
+     * which is the entry point to our application.
+     *
+     * So here we have a Java class.
+     * And inside this class, we have our familiar `main` method.
+     * In this method, we have a call to the ` SpringApplication.run ` method.
+     *
+     * So that's the basics of our project structure.
      */
 
     public static void main(String[] args) {
