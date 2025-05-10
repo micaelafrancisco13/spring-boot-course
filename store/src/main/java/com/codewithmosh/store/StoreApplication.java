@@ -7,10 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StoreApplication {
 
     /**
-     * If you're not using IntelliJ, you can run this application using Maven.
-     * First, we have to open a terminal window and go to our project folder.
-     * If you don't have Maven globally installed on your machine, you can use the Maven wrapper.
-     * With this Maven wrapper, we can run our Spring Boot application using `./mvnw spring-boot:run`.
+     * In every application, there are settings we'll need to configure, like which port the application runs on,
+     * database credentials, or even custom settings for our application.
      */
 
     public static void main(String[] args) {
