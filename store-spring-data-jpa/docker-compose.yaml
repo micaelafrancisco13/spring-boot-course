@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: store-spring-data-jpa
+    container_name: store-spring-data-jpa-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password

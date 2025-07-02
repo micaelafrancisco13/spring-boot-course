@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: store-spring-data-jpa
+  datasource:
+    host: localhost
+    port: 5433
+    dbname: store-spring-data-jpa-db
+    url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}
+    username: postgres
+    password: password
+debug: true
