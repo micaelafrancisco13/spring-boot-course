@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: store-spring-data-jpa
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: store-spring-data-jpa-db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres:
+
+
