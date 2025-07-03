@@ -1,6 +1,7 @@
 package com.example.storespringdatajpa;
 
 import com.example.storespringdatajpa.entities.Address;
+import com.example.storespringdatajpa.entities.Profile;
 import com.example.storespringdatajpa.entities.Tag;
 import com.example.storespringdatajpa.entities.User;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +21,7 @@ public class StoreSpringDataJpaApplication {
         user.setEmail("john@gmail.com");
         user.setPassword("Password13!");
 
+        // address
         var address = Address.builder()
                 .street("123 Main St")
                 .city("Springfield")
@@ -31,6 +33,11 @@ public class StoreSpringDataJpaApplication {
 
         // tags
         user.addTag("Tag 1");
+
+        // profile
+        var profile = Profile.builder().bio("Bio").build();
+        profile.setUser(user);
+        user.setProfile(profile);
 
         System.out.println("User: " + user);
     }

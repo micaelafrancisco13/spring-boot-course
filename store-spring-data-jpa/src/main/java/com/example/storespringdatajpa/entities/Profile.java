@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +28,10 @@ public class Profile {
 
     @Column(name = "loyalty_points")
     private String loyaltyPoints;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId // Tells Hibernate that this column is both the primary key and the foreign key
+    @ToString.Exclude
+    private User user;
 }

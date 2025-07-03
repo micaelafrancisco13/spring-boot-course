@@ -41,6 +41,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+
     public void addAddress(Address address) {
         address.setUser(this);
         addresses.add(address);
@@ -55,5 +58,10 @@ public class User {
         var tag = new Tag(tagName);
         tag.addUser(this);
         tags.add(tag);
+    }
+
+    public void setProfile(Profile profile) {
+        profile.setUser(this);
+        this.profile = profile;
     }
 }
