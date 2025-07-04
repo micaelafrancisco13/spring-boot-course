@@ -1,7 +1,10 @@
 package com.example.storespringdatajpa.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,11 +28,11 @@ public class Tag {
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
-    public void addUser(User user) {
-        users.add(user);
-    }
-
     public Tag(String name) {
         this.name = name;
+    }
+
+    public void addUser(User user) {
+        users.add(user);
     }
 }
