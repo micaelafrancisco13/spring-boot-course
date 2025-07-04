@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -43,6 +44,16 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Profile profile;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    // one-way relationship from user -> product
+    // once we have a product object, we don't need a reference
+    // to the user that has that product in his/her wishlist
+    private Set<Product> wishlists = new LinkedHashSet<>();
 
     public void addAddress(Address address) {
         address.setUser(this);

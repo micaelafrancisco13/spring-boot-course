@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JpaBuddyIdeaProjectConfig">
+    <option name="newEntityIdStrategy" value="Identity" />
     <option name="reLastEntityCreationPackage" value="store-spring-data-jpa/src/main/java/com/example/storespringdatajpa/entities" />
     <option name="reverseEngineeringLastDbConnectionId" value="8e28adb4-acbf-4fcd-b8c0-83e742af7490" />
   </component>
