@@ -3,8 +3,6 @@ package com.example.storespringdatajpa.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -20,6 +18,9 @@ public class Product {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    private String description;
 
     @Column(name = "price")
     private BigDecimal price;
