@@ -2,7 +2,6 @@ package com.example.storespringdatajpa;
 
 import com.example.storespringdatajpa.entities.Address;
 import com.example.storespringdatajpa.entities.Profile;
-import com.example.storespringdatajpa.entities.Tag;
 import com.example.storespringdatajpa.entities.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
