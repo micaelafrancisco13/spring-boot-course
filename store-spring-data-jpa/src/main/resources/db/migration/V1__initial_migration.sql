@@ -1,6 +1,6 @@
 create table users
 (
-    id       bigint       not null
+    id       uuid       not null
         constraint users_pk
             primary key,
     name     varchar(255) not null,
@@ -13,14 +13,14 @@ alter table users
 
 create table addresses
 (
-    id       bigint       not null
+    id       uuid       not null
         constraint addresses_pk
             primary key,
     street   varchar(255) not null,
     city     varchar(255) not null,
     zip_code varchar(255) not null,
     state    varchar(255) not null,
-    user_id  bigint       not null
+    user_id  uuid       not null
         constraint addresses_users_id_fk
             references users
 );

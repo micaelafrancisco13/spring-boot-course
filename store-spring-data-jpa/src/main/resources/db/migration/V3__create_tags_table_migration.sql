@@ -1,6 +1,6 @@
 create table tags
 (
-    id   bigint       not null
+    id   uuid       not null
         constraint tags_pk
             primary key,
     name varchar(255) not null

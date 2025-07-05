@@ -1,6 +1,6 @@
 create table profiles
 (
-    id             bigint not null
+    id             uuid not null
         constraint profiles_pk
             primary key
         constraint profiles_users_id_fk

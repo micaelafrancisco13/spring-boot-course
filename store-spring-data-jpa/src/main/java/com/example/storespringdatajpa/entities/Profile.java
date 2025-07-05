@@ -3,6 +3,8 @@ package com.example.storespringdatajpa.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "profiles")
 @Getter
@@ -13,9 +15,9 @@ import lombok.*;
 @ToString
 public class Profile {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "bio")
     private String bio;

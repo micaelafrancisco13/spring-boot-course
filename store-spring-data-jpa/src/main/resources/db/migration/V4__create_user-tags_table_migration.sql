@@ -1,10 +1,10 @@
 create table user_tags
 (
-    user_id bigint not null
+    user_id uuid not null
         constraint user_tags_users_id_fk
             references users
             on delete cascade,
-    tag_id  bigint not null
+    tag_id  uuid not null
         constraint user_tags_tags_id_fk
             references tags
             on delete cascade,
