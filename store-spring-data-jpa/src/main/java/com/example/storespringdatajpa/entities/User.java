@@ -35,32 +35,32 @@ public class User {
 
     /**
      * One-to-Many relationship between User and Address.
-     *
+     * <p>
      * Key behaviors:
      * - CascadeType.PERSIST: When a User is saved, any new Address in the set will also be saved.
      * - CascadeType.REMOVE: When a User is deleted, all associated Addresses will also be deleted.
      * - orphanRemoval = true:
-     *     Enables automatic deletion of orphaned Address entities (i.e., those removed from the User's address set).
-     *
+     * Enables automatic deletion of orphaned Address entities (i.e., those removed from the User's address set).
+     * <p>
      * Why orphanRemoval is important here:
      * -------------------------------------------------
      * In a bidirectional relationship, the `User` entity is the inverse side (mappedBy = "user"),
      * and the `Address` entity owns the foreign key (`user_id`).
-     *
+     * <p>
      * If an Address is removed from the User's `addresses` set without also setting `address.setUser(null)`,
      * Hibernate will not consider the Address as orphaned, because it still references the User.
-     *
+     * <p>
      * By using orphanRemoval = true **and** ensuring that the Address's user reference is also set to null,
      * Hibernate will correctly interpret the Address as orphaned and issue a DELETE statement for it.
-     *
+     * <p>
      * Without orphanRemoval:
      * - Removing an Address from the set would only break the in-memory link.
      * - The Address would still remain in the database, leading to "orphan" rows.
-     *
+     * <p>
      * With orphanRemoval:
      * - Hibernate will automatically delete the Address from the database once it's
-     *   removed from the set **and** its reference to the User is cleared.
-     *
+     * removed from the set **and** its reference to the User is cleared.
+     * <p>
      * This ensures consistency between the object model and the database,
      * and prevents null constraint violations on the `user_id` column.
      */

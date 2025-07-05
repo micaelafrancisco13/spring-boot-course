@@ -4,26 +4,37 @@ import com.example.storespringdatajpa.entities.Address;
 import com.example.storespringdatajpa.entities.Profile;
 import com.example.storespringdatajpa.entities.User;
 import com.example.storespringdatajpa.repositories.AddressRepository;
+import com.example.storespringdatajpa.repositories.ProductRepository;
 import com.example.storespringdatajpa.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 @AllArgsConstructor
 @Service
 public class UserService {
     private final AddressRepository addressRepository;
+    private final ProductRepository productRepository;
     private UserRepository userRepository;
+
+    @Transactional
+    public void addProductToWishlist() {
+        var userFound = userRepository
+                .findById(UUID.fromString("6e9b6388-d3db-43cc-a1e8-73c03f2d4ebb"))
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userFound.setWishlists(new LinkedHashSet<>(productRepository.findAll()));
+    }
 
     @Transactional
     public void deleteUserAddress() {
         var userFound = userRepository
-                .findById(UUID.fromString("60bb1c72-8dcd-4e90-b577-8bf14b5e7036"))
+                .findById(UUID.fromString("6e9b6388-d3db-43cc-a1e8-73c03f2d4ebb"))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         userFound.getAddresses()
