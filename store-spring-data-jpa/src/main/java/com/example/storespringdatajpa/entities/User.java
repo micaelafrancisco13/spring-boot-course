@@ -2,6 +2,8 @@ package com.example.storespringdatajpa.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -48,9 +50,13 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_wishlist",
+            name = "wishlists",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
+    // When you delete a User record, the database automatically
+    // finds and removes all rows in the wishlists table where
+    // the user_id matches the ID of the deleted user.
+    @OnDelete(action = OnDeleteAction.CASCADE)
     // one-way relationship from user -> product
     // once we have a product object, we don't need a reference
     // to the user that has that product in his/her wishlist
