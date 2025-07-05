@@ -33,7 +33,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    // CascadeType determines how operations performed on the parent entity (the User, in
+    // this case) are automatically applied or "cascaded" to its associated child entities
+    // (Address).
+    // - CascadeType.PERSIST: When you save (persist) a User, any new Address entities
+    //   added to this 'addresses' set will also be automatically saved to the database.
+    // - CascadeType.REMOVE: When you delete (remove) a User, all associated Address entities
+    //   in this set will also be automatically deleted from the database. This helps maintain
+    //   data integrity by preventing orphaned address records.
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Address> addresses = new HashSet<>();
 
     // JoinColumn many-to-one
@@ -45,7 +53,32 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
+    /*
+     * ===================================================================================
+     * CRITICAL FIX: The Importance of CascadeType.REMOVE on the Profile Relationship
+     * ===================================================================================
+     *
+     * This was the primary reason the delete operation was failing. This is an
+     * **application-level block**, not a database one.
+     *
+     * WHY IT'S ESSENTIAL:
+     * Without `cascade = CascadeType.REMOVE`, we gave Hibernate (our JPA provider)
+     * conflicting rules:
+     * 1. "Delete the User."
+     * 2. "But do NOT touch the Profile it's linked to."
+     *
+     * Hibernate's main job is to keep its in-memory cache of objects (the "persistence context")
+     * consistent. To prevent creating an "orphaned" Profile object in its memory, it would
+     * stop the entire transaction immediately.
+     *
+     * THE SOLUTION:
+     * By adding `cascade = CascadeType.REMOVE`, we give Hibernate clear permission: "When a User
+     * is deleted, its associated Profile must be deleted too." This resolves the logical
+     * conflict, allowing Hibernate to correctly manage the object's lifecycle and proceed
+     * with the deletion.
+     *
+     */
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Profile profile;
 
     @ManyToMany
