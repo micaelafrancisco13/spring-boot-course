@@ -1,16 +1,20 @@
 package com.example.storespringdatajpa.services;
 
 import com.example.storespringdatajpa.entities.User;
+import com.example.storespringdatajpa.repositories.ProfileRepository;
 import com.example.storespringdatajpa.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     // this EntityManager is responsible for managing entities using a persistence context
     private final EntityManager em;
@@ -41,5 +45,28 @@ public class UserService {
         if (em.contains(user)) System.out.println("Persistent");
         else System.out.println("Transient or Detached");
 
+    }
+
+    @Transactional // this is the key!
+    public void showRelatedEntities() {
+        var profile = profileRepository
+                .findById(UUID.fromString("5beed2b0-49a8-4f77-91c6-81f391d00ebc"))
+                .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
+        System.out.println("Profile: " + profile.getUser());
+
+        // This throws a LazyInitializationException
+         System.out.println("Profile: " + profile.getUser().getName());
+
+        // Why?
+        // 1. `@OneToOne(fetch = FetchType.LAZY)`: Tells Hibernate to load `User` as a proxy,
+        // not immediately fetch its data, when `Profile` is retrieved.
+        // 2. `profileRepository.findById()`: Fetches `Profile` data. A Hibernate session
+        // is active during this call, and a `User` proxy is placed in `profile.user`.
+        // 3. **Session Closure:** If the method containing `findById()` (and the subsequent
+        // access to the lazy association) is *not* within a `@Transactional` boundary,
+        // the Hibernate session closes immediately after `findById()` completes.
+        // 4. `profile.getUser().getName()`: When this line executes, the `User` proxy tries
+        // to fetch the real `User` data from the database. Since the session is closed,
+        // it fails, throwing `LazyInitializationException`.
     }
 }

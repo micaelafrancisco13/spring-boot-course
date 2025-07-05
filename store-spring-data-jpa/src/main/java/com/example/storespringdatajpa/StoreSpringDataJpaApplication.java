@@ -10,7 +10,7 @@ public class StoreSpringDataJpaApplication {
     public static void main(String[] args) {
         var context = SpringApplication.run(StoreSpringDataJpaApplication.class, args);
         var userService = context.getBean(UserService.class);
-        userService.showEntityStates();
+        userService.showRelatedEntities();
     }
 }
 
