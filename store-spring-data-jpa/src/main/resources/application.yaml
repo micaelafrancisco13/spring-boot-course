@@ -8,4 +8,6 @@ spring:
     url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}
     username: postgres
     password: password
-debug: true
+  jpa:
+    # outputs the SQL statements on the console
+    show-sql: true

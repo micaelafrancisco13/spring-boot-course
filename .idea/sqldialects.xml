@@ -8,6 +8,7 @@
     <file url="file://$PROJECT_DIR$/store-spring-data-jpa/src/main/resources/db/migration/V5__create_products_table_migration.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/store-spring-data-jpa/src/main/resources/db/migration/V7__create_products_categories_relationship.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/store-spring-data-jpa/src/main/resources/db/migration/V8__add_product_description_migration.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/store-spring-data-jpa/src/main/resources/db/migration/V9__create_wishlists_table_migration.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>
