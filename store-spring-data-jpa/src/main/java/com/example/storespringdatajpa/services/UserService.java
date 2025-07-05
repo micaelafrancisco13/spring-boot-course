@@ -5,12 +5,14 @@ import com.example.storespringdatajpa.entities.Profile;
 import com.example.storespringdatajpa.entities.User;
 import com.example.storespringdatajpa.repositories.AddressRepository;
 import com.example.storespringdatajpa.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -19,19 +21,17 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public void deleteUser() {
-        System.out.println("DELETING USER");
-        // This is going to throw an error because on the Address db,
-        // we forgot to set the On Delete to Cascade.
-//        userRepository.deleteById(
-//                UUID.fromString("e37c5b84-0dea-48a0-b642-267f6eb3e28d")
-//        );
+    public void deleteUserAddress() {
+        var userFound = userRepository
+                .findById(UUID.fromString("60bb1c72-8dcd-4e90-b577-8bf14b5e7036"))
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        userRepository.deleteAll();
+        userFound.getAddresses()
+                .stream()
+                .findFirst()
+                .ifPresent(userFound::removeAddress);
 
-        // What if we can't directly alter the database?
-        // This is where we can enable cascading on the Model level
-        // Go to the User class
+        userRepository.save(userFound);
     }
 
     @Transactional
@@ -41,25 +41,25 @@ public class UserService {
         users.add(createUser(
                 "John", "john@email", "<PASSWORD>",
                 createAddress("123 Main St", "Springfield", "MA", "02114"),
-                createProfile("I am a software developer", "123-456-7890", null, "1000")
+                createProfile("I am a software developer", "123-456-7890", null, 1000)
         ));
 
         users.add(createUser(
                 "Jane", "jane@email", "<PASSWORD>",
                 createAddress("456 Main St", "Springfield", "MA", "02114"),
-                createProfile("I am a software engineer", "123-456-7890", null, null)
+                createProfile("I am a software engineer", "123-456-7890", null, 0)
         ));
 
         users.add(createUser(
                 "Jill", "jill@email", "<PASSWORD>",
                 createAddress("789 Main St", "Springfield", "MA", "02114"),
-                createProfile("I am a software architect", "123-456-7890", null, null)
+                createProfile("I am a software architect", "123-456-7890", null, 0)
         ));
 
         users.add(createUser(
                 "Jessica", "jessica@email", "<PASSWORD>",
                 null,
-                createProfile("I am a software tester", "123-456-7890", null, null)
+                createProfile("I am a software tester", "123-456-7890", null, 0)
         ));
 
         users.add(createUser(
@@ -97,12 +97,12 @@ public class UserService {
         return address;
     }
 
-    private Profile createProfile(String bio, String phoneNumber, LocalDate dob, String loyaltyPoints) {
+    private Profile createProfile(String bio, String phoneNumber, LocalDate dob, int loyaltyPoints) {
         Profile profile = new Profile();
         profile.setBio(bio);
         profile.setPhoneNumber(phoneNumber);
         profile.setDateOfBirth(dob);
-        if (loyaltyPoints != null) {
+        if (loyaltyPoints != 0) {
             profile.setLoyaltyPoints(loyaltyPoints);
         }
         return profile;

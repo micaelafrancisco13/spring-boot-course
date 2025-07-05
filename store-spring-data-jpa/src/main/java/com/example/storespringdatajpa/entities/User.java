@@ -33,51 +33,49 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    // CascadeType determines how operations performed on the parent entity (the User, in
-    // this case) are automatically applied or "cascaded" to its associated child entities
-    // (Address).
-    // - CascadeType.PERSIST: When you save (persist) a User, any new Address entities
-    //   added to this 'addresses' set will also be automatically saved to the database.
-    // - CascadeType.REMOVE: When you delete (remove) a User, all associated Address entities
-    //   in this set will also be automatically deleted from the database. This helps maintain
-    //   data integrity by preventing orphaned address records.
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    /**
+     * One-to-Many relationship between User and Address.
+     *
+     * Key behaviors:
+     * - CascadeType.PERSIST: When a User is saved, any new Address in the set will also be saved.
+     * - CascadeType.REMOVE: When a User is deleted, all associated Addresses will also be deleted.
+     * - orphanRemoval = true:
+     *     Enables automatic deletion of orphaned Address entities (i.e., those removed from the User's address set).
+     *
+     * Why orphanRemoval is important here:
+     * -------------------------------------------------
+     * In a bidirectional relationship, the `User` entity is the inverse side (mappedBy = "user"),
+     * and the `Address` entity owns the foreign key (`user_id`).
+     *
+     * If an Address is removed from the User's `addresses` set without also setting `address.setUser(null)`,
+     * Hibernate will not consider the Address as orphaned, because it still references the User.
+     *
+     * By using orphanRemoval = true **and** ensuring that the Address's user reference is also set to null,
+     * Hibernate will correctly interpret the Address as orphaned and issue a DELETE statement for it.
+     *
+     * Without orphanRemoval:
+     * - Removing an Address from the set would only break the in-memory link.
+     * - The Address would still remain in the database, leading to "orphan" rows.
+     *
+     * With orphanRemoval:
+     * - Hibernate will automatically delete the Address from the database once it's
+     *   removed from the set **and** its reference to the User is cleared.
+     *
+     * This ensures consistency between the object model and the database,
+     * and prevents null constraint violations on the `user_id` column.
+     */
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @ToString.Exclude
     private Set<Address> addresses = new HashSet<>();
 
-    // JoinColumn many-to-one
-    // JoinTable many to many
     @ManyToMany
     @JoinTable(
             name = "user_tags",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
 
-    /*
-     * ===================================================================================
-     * CRITICAL FIX: The Importance of CascadeType.REMOVE on the Profile Relationship
-     * ===================================================================================
-     *
-     * This was the primary reason the delete operation was failing. This is an
-     * **application-level block**, not a database one.
-     *
-     * WHY IT'S ESSENTIAL:
-     * Without `cascade = CascadeType.REMOVE`, we gave Hibernate (our JPA provider)
-     * conflicting rules:
-     * 1. "Delete the User."
-     * 2. "But do NOT touch the Profile it's linked to."
-     *
-     * Hibernate's main job is to keep its in-memory cache of objects (the "persistence context")
-     * consistent. To prevent creating an "orphaned" Profile object in its memory, it would
-     * stop the entire transaction immediately.
-     *
-     * THE SOLUTION:
-     * By adding `cascade = CascadeType.REMOVE`, we give Hibernate clear permission: "When a User
-     * is deleted, its associated Profile must be deleted too." This resolves the logical
-     * conflict, allowing Hibernate to correctly manage the object's lifecycle and proceed
-     * with the deletion.
-     *
-     */
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Profile profile;
 
@@ -86,13 +84,8 @@ public class User {
             name = "wishlists",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    // When you delete a User record, the database automatically
-    // finds and removes all rows in the wishlists table where
-    // the user_id matches the ID of the deleted user.
     @OnDelete(action = OnDeleteAction.CASCADE)
-    // one-way relationship from user -> product
-    // once we have a product object, we don't need a reference
-    // to the user that has that product in his/her wishlist
+    @ToString.Exclude
     private Set<Product> wishlists = new LinkedHashSet<>();
 
     public void addAddress(Address address) {

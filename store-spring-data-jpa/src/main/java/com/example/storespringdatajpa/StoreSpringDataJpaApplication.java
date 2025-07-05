@@ -10,25 +10,6 @@ public class StoreSpringDataJpaApplication {
     public static void main(String[] args) {
         var context = SpringApplication.run(StoreSpringDataJpaApplication.class, args);
         var userService = context.getBean(UserService.class);
-        userService.addSampleUsers();
-//        userService.deleteUser();
+        userService.deleteUserAddress();
     }
 }
-
-/// / address
-//var address = Address.builder()
-//        .street("123 Main St")
-//        .city("Springfield")
-//        .state("MA")
-//        .zipCode("02115")
-//        .build();
-//
-//        user.addAddress(address);
-//
-/// / tags
-//        user.addTag("Tag 1");
-//
-/// / profile
-//var profile = Profile.builder().bio("Bio").build();
-//        profile.setUser(user);
-//        user.setProfile(profile);

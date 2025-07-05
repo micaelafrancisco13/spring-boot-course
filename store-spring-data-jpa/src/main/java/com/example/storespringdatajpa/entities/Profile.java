@@ -30,7 +30,7 @@ public class Profile {
     private LocalDate dateOfBirth;
 
     @Column(name = "loyalty_points")
-    private String loyaltyPoints;
+    private int loyaltyPoints;
 
     // If you had FetchType.EAGER (or omitted fetch entirely, as it's the default for @OneToOne),
     // whenever you load a Profile entity from the database, Hibernate would immediately also
