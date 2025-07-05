@@ -1,25 +1,40 @@
 package com.example.storespringdatajpa.services;
 
+import com.example.storespringdatajpa.entities.Address;
+import com.example.storespringdatajpa.entities.User;
 import com.example.storespringdatajpa.repositories.AddressRepository;
-import jakarta.transaction.Transactional;
+import com.example.storespringdatajpa.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @Service
 public class UserService {
+    private UserRepository userRepository;
     private final AddressRepository addressRepository;
 
-    @Transactional
-    public void showRelatedEntities() {
-        var address = addressRepository
-                .findById(UUID.fromString("afb3e880-62d4-41c6-a968-913fe1b7fd85"))
-                .orElseThrow(() -> new IllegalStateException("Address not found"));
+    public void persistUserAddress() {
+        var user = new User();
+        user.setName("Kerwin");
+        user.setEmail("kerwin31@gmail.com");
+        user.setPassword("Password13!");
 
-        System.out.println("Address: " + address);
-        System.out.println("User email: " + address.getUser().getEmail());
-        System.out.println("User bio: " + address.getUser().getProfile().getBio());
+        var address = new Address();
+        address.setStreet("123 Main St");
+        address.setCity("New York");
+        address.setState("NY");
+        address.setZipCode("12345");
+
+        user.addAddress(address);
+
+        // By default, Hibernate does not propagate the persist operation.
+        // Meaning, when it saves the user, it does not save its related entities like
+        // the address.
+        userRepository.save(user);
+
+        // One way is to save the address separately:
+        // addressRepository.save(address);
+
+        // Another better way is by using the Cascade on the User entity Address field
     }
 }

@@ -33,7 +33,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Set<Address> addresses = new HashSet<>();
 
     // JoinColumn many-to-one
