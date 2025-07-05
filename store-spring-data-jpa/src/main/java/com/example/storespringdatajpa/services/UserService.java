@@ -15,8 +15,8 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @Service
 public class UserService {
-    private UserRepository userRepository;
     private final AddressRepository addressRepository;
+    private UserRepository userRepository;
 
     @Transactional
     public void deleteUser() {

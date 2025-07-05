@@ -1,6 +1,6 @@
 create table products
 (
-    id    uuid         not null
+    id    uuid           not null
         constraint products_pk
             primary key,
     name  varchar(255)   not null,
