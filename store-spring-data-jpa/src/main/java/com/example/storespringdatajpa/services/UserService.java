@@ -36,10 +36,10 @@ public class UserService {
 
         // all the methods of a repository are transactional
         userRepository.save(user);
+        userRepository.findAll().forEach(u -> System.out.println(u.getEmail()));
 
         if (em.contains(user)) System.out.println("Persistent");
         else System.out.println("Transient or Detached");
 
-//        userRepository.delete(user);
     }
 }
