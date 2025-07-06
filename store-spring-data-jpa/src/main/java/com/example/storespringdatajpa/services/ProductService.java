@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -19,12 +18,15 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
-    // Ensures the operation is executed within a transaction.
     @Transactional
-    public void updateProductPriceByCategory() {
-        productRepository.updatePriceByCategoryId(
-                UUID.fromString("d9ab1075-d431-4bd4-89f4-c3532c444b4b"),
-                BigDecimal.valueOf(113_000));
+    public void fetchProductsByCategory() {
+        var categoryFound = categoryRepository
+                .findAll()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalQueryOperationException("Category not found"));
+
+        productRepository.findByCategory(categoryFound).forEach(System.out::println);
     }
 
     @Transactional
