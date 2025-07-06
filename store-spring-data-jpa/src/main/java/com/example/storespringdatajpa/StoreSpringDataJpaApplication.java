@@ -11,6 +11,6 @@ public class StoreSpringDataJpaApplication {
         var context = SpringApplication.run(StoreSpringDataJpaApplication.class, args);
         var service = context.getBean(ProductService.class);
 //        service.addProductToWishlist();
-        service.deleteProduct();
+        service.updateProductPriceByCategory();
     }
 }
