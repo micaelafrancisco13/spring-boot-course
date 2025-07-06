@@ -14,19 +14,19 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * ### Why is `@Query` needed here with `@EntityGraph`?
-     *
+     * <p>
      * While you might not always need a `@Query` annotation with `@EntityGraph`, it's necessary
      * in this specific case because we've created a method with a **custom name** (`findAllWithAddresses`).
-     *
+     * <p>
      * Spring Data JPA automatically understands what to do with built-in methods like `findAll()` or
      * methods that follow standard naming conventions like `findByEmail()`. However, when you create
      * a custom method name that doesn't follow these patterns, you must explicitly tell JPA what to select.
-     *
+     * <p>
      * - **`@Query("select u from User u")`**: This tells JPA the base query to execute—to select all User entities.
-     *
+     * <p>
      * - **`@EntityGraph(attributePaths = "addresses")`**: This then modifies that query, telling JPA to
      * also eagerly fetch the `addresses` collection for each User in a single, optimized `JOIN` query.
-     *
+     * <p>
      * In short, the `@Query` defines **what** to fetch, and the `@EntityGraph` defines **how** to fetch its
      * related data to solve the N+1 problem.
      */

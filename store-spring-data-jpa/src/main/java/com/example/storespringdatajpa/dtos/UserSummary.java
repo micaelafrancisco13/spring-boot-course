@@ -4,5 +4,6 @@ import java.util.UUID;
 
 public interface UserSummary {
     UUID getId();
+
     String getEmail();
 }
