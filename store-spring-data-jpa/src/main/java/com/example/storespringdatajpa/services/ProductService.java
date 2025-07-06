@@ -20,6 +20,23 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
+    public void fetchProductsByCriteria() {
+        /*
+         * A method named `findProductsByCriteria` on the main repository would normally fail.
+         * Spring Data JPA would try to interpret it as a "derived query" and look for a
+         * property named 'criteria' on the `Product` entity, which doesn't exist.
+         *
+         * To build a query with dynamic conditions (e.g., ignoring null parameters),
+         * we must provide a custom implementation, which is done in the
+         * `ProductCriteriaRepositoryImpl` class.
+         */
+        productRepository.findProductsByCriteria(
+                        null,
+                        BigDecimal.valueOf(100_000),
+                        BigDecimal.valueOf(150_000))
+                .forEach(p -> System.out.println(p.getName()));
+    }
+
     public void fetchAllProducts() {
         var product = new Product();
         product.setName("iPhone");
