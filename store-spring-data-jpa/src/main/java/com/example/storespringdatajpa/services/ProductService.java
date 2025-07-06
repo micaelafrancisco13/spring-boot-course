@@ -6,6 +6,8 @@ import com.example.storespringdatajpa.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.hibernate.query.IllegalQueryOperationException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,10 +20,19 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
-    public void fetchAllProductsInAGivenPriceRange() {
-        var products = productRepository
-                .findProducts(BigDecimal.valueOf(100_000), BigDecimal.valueOf(150_000));
-        products.forEach(p -> System.out.println("Product name: " + p.getName()));
+    public void fetchAllProducts() {
+        var product = new Product();
+        product.setName("iPhone");
+
+        // LIKE operator
+        var matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        var example = Example.of(product, matcher);
+
+        productRepository.findAll(example).forEach(p -> System.out.println(p.getName()));
     }
 
     @Transactional

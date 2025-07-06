@@ -1,6 +1,6 @@
 package com.example.storespringdatajpa;
 
-import com.example.storespringdatajpa.services.Demo;
+import com.example.storespringdatajpa.services.ProductService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,7 +9,7 @@ public class StoreSpringDataJpaApplication {
 
     public static void main(String[] args) {
         var context = SpringApplication.run(StoreSpringDataJpaApplication.class, args);
-        var service = context.getBean(Demo.class);
-        service.show();
+        var service = context.getBean(ProductService.class);
+        service.fetchAllProducts();
     }
 }
