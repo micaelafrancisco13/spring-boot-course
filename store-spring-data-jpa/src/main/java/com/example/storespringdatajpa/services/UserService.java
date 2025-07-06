@@ -22,6 +22,34 @@ public class UserService {
     private final ProductRepository productRepository;
     private UserRepository userRepository;
 
+    /*
+     * Here's what’s going on when you don’t annotate your method with @Transactional:
+     *
+     * 1. userRepository.findByEmail(...) executes the query.
+     * 2. Spring Data JPA opens a temporary transaction just for that method call
+     *    and closes it immediately after the result is returned.
+     * 3. You now hold a detached User entity — it is no longer managed by the persistence context.
+     * 4. When System.out.println(userFound) (or any code) tries to access user.getTags(),
+     *    Hibernate attempts to lazily initialize the tags collection.
+     * 5. But since the Hibernate Session is already closed at that point,
+     *    it throws a LazyInitializationException.
+     *
+     * Solution: Annotate the method with @Transactional to keep the session open
+     * during the entire method execution so lazy-loaded fields can be accessed safely.
+     */
+    @Transactional
+    public void fetchUserWithTags() {
+        var userFound = userRepository
+                .findByEmail("jane@email")
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // You might notice Hibernate also fetches the wishlists and tags, even though we only
+        // specified "addresses" in the @EntityGraph.
+        // This happens because the @ToString annotation on the User entity accesses those fields,
+        // triggering their lazy loading.
+        System.out.println("User found: " + userFound);
+    }
+
     @Transactional
     public void addProductToWishlist() {
         var userFound = userRepository

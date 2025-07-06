@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+//@ToString - has a warning
 public class User {
     @Id
     @GeneratedValue
@@ -33,47 +33,23 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    /**
-     * One-to-Many relationship between User and Address.
-     * <p>
-     * Key behaviors:
-     * - CascadeType.PERSIST: When a User is saved, any new Address in the set will also be saved.
-     * - CascadeType.REMOVE: When a User is deleted, all associated Addresses will also be deleted.
-     * - orphanRemoval = true:
-     * Enables automatic deletion of orphaned Address entities (i.e., those removed from the User's address set).
-     * <p>
-     * Why orphanRemoval is important here:
-     * -------------------------------------------------
-     * In a bidirectional relationship, the `User` entity is the inverse side (mappedBy = "user"),
-     * and the `Address` entity owns the foreign key (`user_id`).
-     * <p>
-     * If an Address is removed from the User's `addresses` set without also setting `address.setUser(null)`,
-     * Hibernate will not consider the Address as orphaned, because it still references the User.
-     * <p>
-     * By using orphanRemoval = true **and** ensuring that the Address's user reference is also set to null,
-     * Hibernate will correctly interpret the Address as orphaned and issue a DELETE statement for it.
-     * <p>
-     * Without orphanRemoval:
-     * - Removing an Address from the set would only break the in-memory link.
-     * - The Address would still remain in the database, leading to "orphan" rows.
-     * <p>
-     * With orphanRemoval:
-     * - Hibernate will automatically delete the Address from the database once it's
-     * removed from the set **and** its reference to the User is cleared.
-     * <p>
-     * This ensures consistency between the object model and the database,
-     * and prevents null constraint violations on the `user_id` column.
-     */
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @ToString.Exclude
     private Set<Address> addresses = new HashSet<>();
 
+    // What if you want to load a user along with its associated tags?
+    // One way is to change the fetch strategy to EAGER loading, but that comes with a trade-off:
+    // the tags will be loaded every time you fetch a user — even if you don’t need them.
+    //
+    // If you only want to load the tags for specific queries,
+    // a better approach is to keep the fetch type as LAZY (the default for @ManyToMany)
+    // and use an @EntityGraph in those targeted queries.
+    // This allows you to control when the related tags are loaded, optimizing performance.
+    // Go to the UserRepository.
     @ManyToMany
     @JoinTable(
             name = "user_tags",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -85,7 +61,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
     private Set<Product> wishlists = new LinkedHashSet<>();
 
     public void addAddress(Address address) {
@@ -107,5 +82,14 @@ public class User {
     public void setProfile(Profile profile) {
         profile.setUser(this);
         this.profile = profile;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
