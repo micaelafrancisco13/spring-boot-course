@@ -36,15 +36,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Address> addresses = new HashSet<>();
 
-    // What if you want to load a user along with its associated tags?
-    // One way is to change the fetch strategy to EAGER loading, but that comes with a trade-off:
-    // the tags will be loaded every time you fetch a user — even if you don’t need them.
-    //
-    // If you only want to load the tags for specific queries,
-    // a better approach is to keep the fetch type as LAZY (the default for @ManyToMany)
-    // and use an @EntityGraph in those targeted queries.
-    // This allows you to control when the related tags are loaded, optimizing performance.
-    // Go to the UserRepository.
     @ManyToMany
     @JoinTable(
             name = "user_tags",
