@@ -44,6 +44,5 @@ public class Profile {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     @MapsId // Tells Hibernate that this column is both the primary key and the foreign key
-    @ToString.Exclude
     private User user;
 }

@@ -44,6 +44,7 @@ public class User {
     private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ToString.Exclude
     private Profile profile;
 
     @ManyToMany

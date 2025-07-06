@@ -1,9 +1,12 @@
 package com.example.storespringdatajpa.repositories;
 
+import com.example.storespringdatajpa.dtos.UserSummary;
+import com.example.storespringdatajpa.entities.Profile;
 import com.example.storespringdatajpa.entities.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,4 +34,14 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @EntityGraph(attributePaths = "addresses")
     @Query("select u from User u")
     List<User> findAllWithAddresses();
+
+    List<User> findByProfile(Profile profile);
+
+    @EntityGraph(attributePaths = "profile")
+    @Query("select u.id as id, u.email as email from User u " +
+            "join Profile p on u.id = p.user.id " +
+            "where p.loyaltyPoints > :value " +
+            "order by u.email")
+    List<UserSummary> findByLoyaltyPointsGreaterThan(@Param("value") int value);
+
 }
