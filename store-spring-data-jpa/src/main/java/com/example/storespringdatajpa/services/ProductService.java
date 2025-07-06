@@ -3,14 +3,17 @@ package com.example.storespringdatajpa.services;
 import com.example.storespringdatajpa.entities.Product;
 import com.example.storespringdatajpa.repositories.CategoryRepository;
 import com.example.storespringdatajpa.repositories.ProductRepository;
+import com.example.storespringdatajpa.repositories.specifications.ProductSpecification;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.hibernate.query.IllegalQueryOperationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 @AllArgsConstructor
@@ -20,21 +23,29 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
-    public void fetchProductsByCriteria() {
-        /*
-         * A method named `findProductsByCriteria` on the main repository would normally fail.
-         * Spring Data JPA would try to interpret it as a "derived query" and look for a
-         * property named 'criteria' on the `Product` entity, which doesn't exist.
-         *
-         * To build a query with dynamic conditions (e.g., ignoring null parameters),
-         * we must provide a custom implementation, which is done in the
-         * `ProductCriteriaRepositoryImpl` class.
-         */
-        productRepository.findProductsByCriteria(
-                        null,
-                        BigDecimal.valueOf(100_000),
-                        BigDecimal.valueOf(150_000))
-                .forEach(p -> System.out.println(p.getName()));
+    public void fetchProductsBySpecification(String name, BigDecimal min, BigDecimal max) {
+        // 1. Create a list to hold specifications based on the provided filter criteria.
+        var specs = new ArrayList<Specification<Product>>();
+
+        if (name != null) {
+            specs.add(ProductSpecification.hasName(name));
+        }
+        if (min != null) {
+            specs.add(ProductSpecification.hasPriceGreaterThanOrEqualTo(min));
+        }
+        if (max != null) {
+            specs.add(ProductSpecification.hasPriceLessThanOrEqualTo(max));
+        }
+
+        // 2. Combine the list of specifications into a single Specification using a logical AND.
+        // The reduce operation chains them together (e.g., spec1.and(spec2).and(spec3)...).
+        var finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null); // If the list is empty, `orElse(null)` ensures the spec is null.
+
+        // 3. Execute the query. Passing a null specification to findAll() is equivalent
+        // to an unconditional query and will return all products.
+        productRepository.findAll(finalSpec).forEach(p -> System.out.println(p.getName()));
     }
 
     public void fetchAllProducts() {
