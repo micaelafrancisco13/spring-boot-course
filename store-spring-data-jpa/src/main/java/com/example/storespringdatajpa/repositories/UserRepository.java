@@ -79,7 +79,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * that one specific query. All other queries that load the entity will continue to use efficient, lazy loading.
      * This allows you to create an optimized data-fetching plan for each specific use case.
      *
-
      * **Conclusion**: Always default your `@OneToMany` and `@ManyToMany` relationships to `FetchType.LAZY`.
      * When you need to prevent an N+1 query problem for a specific operation, use `@EntityGraph` on your
      * repository method to selectively eager-load the data you need.

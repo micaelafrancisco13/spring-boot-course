@@ -8,5 +8,6 @@ import java.util.UUID;
  */
 public interface ProductSummary {
     UUID getId();
+
     String getName();
 }
