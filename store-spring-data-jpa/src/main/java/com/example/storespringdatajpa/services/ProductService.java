@@ -18,15 +18,10 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
-    @Transactional
-    public void fetchProductsByCategory() {
-        var categoryFound = categoryRepository
-                .findAll()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalQueryOperationException("Category not found"));
-
-        productRepository.findByCategory(categoryFound).forEach(System.out::println);
+    public void fetchAllProductsInAGivenPriceRange() {
+        var products = productRepository
+                .findProducts(BigDecimal.valueOf(100_000), BigDecimal.valueOf(150_000));
+        products.forEach(p -> System.out.println("Product name: " + p.getName()));
     }
 
     @Transactional
