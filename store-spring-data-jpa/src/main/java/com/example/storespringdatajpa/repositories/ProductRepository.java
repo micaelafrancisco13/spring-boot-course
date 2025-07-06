@@ -1,37 +1,28 @@
 package com.example.storespringdatajpa.repositories;
 
-import com.example.storespringdatajpa.dtos.ProductSummary;
 import com.example.storespringdatajpa.dtos.ProductSummaryDTO;
 import com.example.storespringdatajpa.entities.Category;
 import com.example.storespringdatajpa.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    /*
-     * When you need to fetch only a subset of columns from an entity, you can use Projections.
-     * This is highly efficient as it avoids loading the entire entity into memory.
-     * Spring Data JPA supports two main types of projections: Interface-based and Class-based (DTOs).
-     *
-     * ## Interface vs. Class-Based Projections
-     *
-     * 1.  **Interface-Based Projection (`ProductSummary`)**:
-     * - Spring Data automatically creates a proxy instance of this interface at runtime.
-     * - The getter methods in the interface (e.g., `getId()`) directly map to the selected entity fields.
-     * - This is a "closed" projection, meaning you can only access the properties defined by the getters.
-     * - It is generally more lightweight and often the most performant option.
-     *
-     * 2.  **Class-Based Projection (`ProductSummaryDTO`)**:
-     * - This uses a concrete class (a DTO) to hold the results.
-     * - Spring Data instantiates this class for each result row, mapping the selected columns
-     * to the constructor parameters.
-     * - It's useful when you need to create more complex data objects or add custom logic to the DTO itself.
-     *
-     * The method below uses an interface, but it would work identically if you changed the
-     * return type to `List<ProductSummaryDTO>`.
-     */
-    List<ProductSummary> findByCategory(Category category);
+    // You can use projections in a @Query to return only specific fields.
+    // In the commented-out example below, even though we might want a projection like ProductSummary,
+    // it still fetches full Product entities because of "select p".
+    // To optimize this, you should explicitly select only the fields you need.
+
+    // @Query("select p from Product p where p.category = :category")
+
+    // If you want to use a DTO like ProductSummaryDTO for projection,
+    // you must instantiate it directly in the JPQL query using a constructor expression.
+    // This ensures only the selected fields are fetched from the database.
+    @Query("select new com.example.storespringdatajpa.dtos.ProductSummaryDTO(p.id, p.name) " +
+            "from Product p where p.category = :category")
+    List<ProductSummaryDTO> findByCategory(@Param("category") Category category);
 }
