@@ -12,6 +12,6 @@ public class StoreSpringDataJpaApplication {
     public static void main(String[] args) {
         var context = SpringApplication.run(StoreSpringDataJpaApplication.class, args);
         var service = context.getBean(ProductService.class);
-        service.fetchProductsBySpecification("iphone", BigDecimal.valueOf(125_000), null);
+        service.fetchPaginatedProducts();
     }
 }
